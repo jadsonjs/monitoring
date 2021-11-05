@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Define directory where save the logs -->
+    <property name="LOGS" value="/Users/jadson/Development/temp" />
+    <property name="LOG_PATTERN" value="%d %p %C{1.} [%t] %m%n" />
+
+
+    <!-- Configure Console log format -->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %black(%d{ISO8601}) %highlight(%-5level) [%magenta(%t)] %yellow(%C{1.}): %msg%n%throwable
+            </Pattern>
+        </layout>
+    </appender>
+
+    <!-- Configure log file format for info -->
+    <appender name="AppInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/app_info.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${LOG_PATTERN}</Pattern>
+        </encoder>
+
+        <!-- Exclude ERROR level of this file -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+
+        <!-- rollover daily and when the file reaches 10 MegaBytes -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS}/archived/info-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Configure log file format for errors -->
+    <appender name="AppErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/app_error.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${LOG_PATTERN}</Pattern>
+        </encoder>
+
+        <!-- Exclude INFO and WORN level of this file -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+
+
+        <!-- rollover daily and when the file reaches 10 MegaBytes -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS}/archived/error-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!-- A file to spring logs -->
+    <appender name="SpringLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/spring-framework.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOGS}/spring-framework-%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+
+
+    <logger name="br.com.example.jadson" additivity="false" level="INFO">
+        <appender-ref ref="AppErrorLog" />
+        <appender-ref ref="AppInfoLog" />
+        <appender-ref ref="Console" />
+    </logger>
+
+    <logger name="org.springframework" additivity="false" level="INFO">
+        <appender-ref ref="SpringLog" />
+        <appender-ref ref="Console" />
+    </logger>
+
+    <!--
+     == The appender Console that was created is then referenced in the root logger.
+     ==  Causing it to only output messages that are defined at log level INFO or above (INFO, WARN, ERROR).
+     -->
+    <root level="INFO">
+        <appender-ref ref="Console" />
+    </root>
+
+
+
+</configuration>
