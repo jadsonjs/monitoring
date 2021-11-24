@@ -22,7 +22,7 @@ public class LoggingController {
      */
     Logger logger = LoggerFactory.getLogger(LoggingController.class);
 
-    @GetMapping("/index")
+    @GetMapping("/loging")
     public String index() {
         // logger.trace("A TRACE Message");
         // logger.debug("A DEBUG Message");
@@ -53,6 +53,6 @@ public class LoggingController {
             logger.error("ERROR: "+ex.getLocalizedMessage(), ex);
         }
 
-        return "Howdy! Check out the Logs to see the error...";
+        return "Howdy! Check out the Logs to see the tracing error...";
     }
 }
