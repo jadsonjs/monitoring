@@ -21,16 +21,19 @@ services:
     image: grafana/promtail:2.4.1
     container_name: monitoring-promtail
     volumes:
-      - $PWD/promtail.yaml:/etc/promtail/promtail.yaml
+      - $PWD/promtail.yml:/etc/promtail/promtail.yaml
       - /home/jadson/development/temp/log:/var/log/
     command: "--config.file=/etc/promtail/promtail.yaml"
-    
+    ports:
+      - "9080:9080"
 
   # Loki is a logging management system created as part of the Grafana project,  
   # Allow store log to be shown in grafana
   loki:
     image: grafana/loki:2.4.1
     container_name: monitoring-loki
+    volumes:
+      - $PWD/loki.yml:/etc/loki/local-config.yaml
     command: -config.file=/etc/loki/local-config.yaml
     ports:
       - "3100:3100"

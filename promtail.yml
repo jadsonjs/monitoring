@@ -1,27 +1,35 @@
 
 #
-# Arquivo de configuração do promtail
+# Promtail Configuration Fiel
 #
-# ler os logs gerados pela aplicação e envia para o loki
+# read logs generate by application and send it to loki data base
 #
 
 server:
+  # the port wher promtail will export th e logs
   http_listen_port: 9080
   grpc_listen_port: 0
 
+# positions files, to promtail star from a specific point, if it stoped.
 positions:
   filename: /tmp/positions.yaml
 
+# clients where webwill you send the logs
 # send the logs to loki that will be runing in this address
 clients:
   - url: http://loki:3100/loki/api/v1/push
 
+# configure a log capture
+# from what file the promtail will collect the information
 scrape_configs:
-  - job_name: system
+  - job_name: app
     static_configs:
       - targets:
           - localhost
         labels:
           job: varlogs
           # where the promtail will read the logs
-          __path__: /var/log/*log
+          __path__: /home/jadson/development/temp/log/*.log 
+
+
+

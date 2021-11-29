@@ -2,7 +2,7 @@
 <configuration>
 
     <!-- Define directory where save the logs -->
-    <property name="LOGS" value="/Users/jadson/Development/temp" />
+    <property name="LOGS" value="/home/jadson/development/temp/log" />
     <property name="LOG_PATTERN" value="%d %p %C{1.} [%t] %m%n" />
 
 
