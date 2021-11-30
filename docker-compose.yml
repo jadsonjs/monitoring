@@ -5,27 +5,46 @@ version: "3"
 
 services:
 
+  # Tempo is an open source, easy-to-use and high-scale distributed tracing backend. 
+  tempo:
+    image: grafana/tempo
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - $PWD/tempo-config.yaml:/etc/tempo.yaml
+      - ./tempo-data:/tmp/tempo
+    ports:
+      - "14268"  # jaeger ingest
+    logging:
+      driver: loki
+      options:
+        loki-url: 'http://localhost:3100/loki/api/v1/push'
+
+
+
   # Prometheus is a time-series database that stores our metric data by pulling it periodically over HTTP
   prometheus:
     image: prom/prometheus:v2.31.1
     container_name: monitoring-prometheus
-    # uses the promethus.yml configuration file in current directory
+    # uses the prometheus-config.yaml configuration file in current directory
     volumes:
-      - $PWD/prometheus.yml:/etc/prometheus/prometheus.yml
-    command: "--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus"
+      - $PWD/prometheus-config.yaml:/etc/prometheus/prometheus.yaml
+    command: [ "--config.file=/etc/prometheus/prometheus.yaml" ]
     ports:
       - "9090:9090"
   
+
   # promtail is the agent component that provides the usual plugin mode to filter and transforms our log traces 
   promtail:
     image: grafana/promtail:2.4.1
     container_name: monitoring-promtail
     volumes:
-      - $PWD/promtail.yml:/etc/promtail/promtail.yaml
+      - $PWD/promtail-config.yaml:/etc/promtail/promtail.yaml
       - /home/jadson/development/temp/log:/var/log/
     command: "--config.file=/etc/promtail/promtail.yaml"
     ports:
       - "9080:9080"
+
+
 
   # Loki is a logging management system created as part of the Grafana project,  
   # Allow store log to be shown in grafana
@@ -33,10 +52,12 @@ services:
     image: grafana/loki:2.4.1
     container_name: monitoring-loki
     volumes:
-      - $PWD/loki.yml:/etc/loki/local-config.yaml
-    command: -config.file=/etc/loki/local-config.yaml
+      - $PWD/loki-config.yaml:/etc/loki/local-config.yaml
+    command: [ "-config.file=/etc/loki/local-config.yaml" ]
     ports:
       - "3100:3100"
+
+
 
   # Grafana is the open source analytics & monitoring solution for every database.    
   grafana:

@@ -1,12 +1,9 @@
-
 #
-# Promtail Configuration Fiel
+# Promtail Configuration File
 #
 # read logs generate by application and send it to loki data base
 #
-
 server:
-  # the port wher promtail will export th e logs
   http_listen_port: 9080
   grpc_listen_port: 0
 
@@ -14,22 +11,21 @@ server:
 positions:
   filename: /tmp/positions.yaml
 
-# clients where webwill you send the logs
+# clients where webwill you send the logs (send to loki)
 # send the logs to loki that will be runing in this address
+# in Docker, have to use IP address, bacause localhost is the Docker IP
 clients:
-  - url: http://loki:3100/loki/api/v1/push
+  - url: http://172.18.0.1:3100/loki/api/v1/push
 
 # configure a log capture
 # from what file the promtail will collect the information
+# we will map app log directory to /var/log
 scrape_configs:
-  - job_name: app
-    static_configs:
-      - targets:
-          - localhost
-        labels:
-          job: varlogs
-          # where the promtail will read the logs
-          __path__: /home/jadson/development/temp/log/*.log 
-
-
+- job_name: system
+  static_configs:
+  - targets:
+      - 172.18.0.1
+    labels:
+      job: varlogs
+      __path__: /var/log/*log
 
