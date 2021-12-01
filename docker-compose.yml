@@ -7,17 +7,14 @@ services:
 
   # Tempo is an open source, easy-to-use and high-scale distributed tracing backend. 
   tempo:
-    image: grafana/tempo
-    command: [ "-config.file=/etc/tempo.yaml" ]
+    image: grafana/tempo:1.2.1
+    command: ["--config.file=/etc/tempo.yaml"]
+    ports:
+      - "3100:3100"
+      - "55680:55680"
     volumes:
       - $PWD/tempo-config.yaml:/etc/tempo.yaml
-      - ./tempo-data:/tmp/tempo
-    ports:
-      - "14268"  # jaeger ingest
-    logging:
-      driver: loki
-      options:
-        loki-url: 'http://localhost:3100/loki/api/v1/push'
+
 
 
 
@@ -40,7 +37,7 @@ services:
     volumes:
       - $PWD/promtail-config.yaml:/etc/promtail/promtail.yaml
       - /home/jadson/development/temp/log:/var/log/
-    command: "--config.file=/etc/promtail/promtail.yaml"
+    command: ["--config.file=/etc/promtail/promtail.yaml"]
     ports:
       - "9080:9080"
 
@@ -53,7 +50,7 @@ services:
     container_name: monitoring-loki
     volumes:
       - $PWD/loki-config.yaml:/etc/loki/local-config.yaml
-    command: [ "-config.file=/etc/loki/local-config.yaml" ]
+    command: [ "--config.file=/etc/loki/local-config.yaml" ]
     ports:
       - "3100:3100"
 
