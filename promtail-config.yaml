@@ -21,11 +21,48 @@ clients:
 # from what file the promtail will collect the information
 # we will map app log directory to /var/log
 scrape_configs:
-- job_name: system
+# Name to identify this scrape config in the Promtail UI
+- job_name: collect_logs
+
+  # Promtail borrows the same service discovery mechanism from Prometheus, 
+  # although it currently only supports static and kubernetes service discovery.
   static_configs:
   - targets:
       - 172.18.0.1
     labels:
-      job: varlogs
-      __path__: /var/log/*log
+      app: app1      # A `app` label will help identify logs from specific application
+      level: info    # level of logs
+      __path__: /var/log/app_info.log  # where are the log files
+
+- job_name: collect_error
+  static_configs:
+  - targets:
+      - 172.18.0.1
+    labels:
+      #job: applogs
+      app: app1
+      level: error
+      __path__: /var/log/app_error.log    
+
+####################################
+# two application same machine
+####################################
+
+- job_name: collect_logs2
+  static_configs:
+  - targets:
+      - 172.18.0.1
+    labels:
+      app: app2      
+      level: info    
+      __path__: /var/log/app2/app_info.log
+
+- job_name: collect_error2
+  static_configs:
+  - targets:
+      - 172.18.0.1
+    labels:
+      app: app2
+      level: error
+      __path__: /var/log/app2/app_error.log           
 
