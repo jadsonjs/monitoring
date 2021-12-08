@@ -1,21 +1,11 @@
 #
 # docker compose file to configure all tools for monitoring stack
 #
+# run docker-compose up -d
+#
 version: "3"
 
 services:
-
-  # Tempo is an open source, easy-to-use and high-scale distributed tracing backend. 
-  tempo:
-    image: grafana/tempo:1.2.1
-    command: ["--config.file=/etc/tempo.yaml"]
-    ports:
-      - "3100:3100"
-      - "55680:55680"
-    volumes:
-      - $PWD/tempo-config.yaml:/etc/tempo.yaml
-
-
 
 
   # Prometheus is a time-series database that stores our metric data by pulling it periodically over HTTP
@@ -70,6 +60,19 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+      - promtail
       - loki
 
+
+
+  # early adoption
+  # Tempo is an open source, easy-to-use and high-scale distributed tracing backend. 
+  #tempo:
+  #  image: grafana/tempo:1.2.1
+  #  command: ["--config.file=/etc/tempo.yaml"]
+  #  ports:
+  #    - "3100:3100"
+  #    - "55680:55680"
+  #  volumes:
+  #    - $PWD/tempo-config.yaml:/etc/tempo.yaml
 

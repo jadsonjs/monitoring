@@ -23,7 +23,6 @@ clients:
 scrape_configs:
 # Name to identify this scrape config in the Promtail UI
 - job_name: collect_logs
-
   # Promtail borrows the same service discovery mechanism from Prometheus, 
   # although it currently only supports static and kubernetes service discovery.
   static_configs:
@@ -31,7 +30,7 @@ scrape_configs:
       - 172.18.0.1
     labels:
       app: app1      # A `app` label will help identify logs from specific application
-      level: info    # level of logs
+      type: info     # level of logs
       __path__: /var/log/app_info.log  # where are the log files
 
 - job_name: collect_error
@@ -39,30 +38,69 @@ scrape_configs:
   - targets:
       - 172.18.0.1
     labels:
-      #job: applogs
       app: app1
-      level: error
-      __path__: /var/log/app_error.log    
+      type: error
+      __path__: /var/log/app_error.log   
 
-####################################
-# two application same machine
-####################################
-
-- job_name: collect_logs2
+- job_name: collect_trace
   static_configs:
   - targets:
       - 172.18.0.1
     labels:
-      app: app2      
-      level: info    
-      __path__: /var/log/app2/app_info.log
+      app: app1
+      type: trace
+      __path__: /var/log/app_trace.log   
 
-- job_name: collect_error2
+- job_name: collect_request
   static_configs:
   - targets:
       - 172.18.0.1
     labels:
-      app: app2
-      level: error
-      __path__: /var/log/app2/app_error.log           
+      app: app1
+      type: request
+      __path__: /var/log/app_request.log  
+
+
+###############################################################
+# if we have to or more application 
+# same machine
+# can repeat the configuration changing the location of logs
+###############################################################
+
+#- job_name: collect_logs2
+#  static_configs:
+#  - targets:
+#      - 172.18.0.1
+#    labels:
+#      app: app2      
+#      type: info    
+#      __path__: /var/log/app2/app_info.log
+
+#- job_name: collect_error2
+#  static_configs:
+#  - targets:
+#      - 172.18.0.1
+#    labels:
+#      app: app2
+#      type: error
+#      __path__: /var/log/app2/app_error.log           
+
+#- job_name: collect_trace2
+#  static_configs:
+#  - targets:
+#      - 172.18.0.1
+#    labels:
+#      app: app1
+#      type: trace
+#      __path__: /var/log/app2/app_trace.log   
+
+#- job_name: collect_request2
+#  static_configs:
+#  - targets:
+#      - 172.18.0.1
+#    labels:
+#      app: app1
+#      type: request
+#      __path__: /var/log/app2/app_request.log  
+
 

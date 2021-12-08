@@ -6,7 +6,7 @@
     <property name="LOG_PATTERN" value="%d %p %C{1.} [%t] %m%n" />
 
 
-    <!-- Configure Console log format -->
+    <!-- Configure Console log format (all logs)-->
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
@@ -15,7 +15,7 @@
         </layout>
     </appender>
 
-    <!-- Configure log file format for info -->
+    <!-- Configure log file format for info (generic info logs)-->
     <appender name="AppInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOGS}/app_info.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -31,7 +31,7 @@
 
         <!-- rollover daily and when the file reaches 10 MegaBytes -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOGS}/archived/info-%d{yyyy-MM-dd}.%i.log
+            <fileNamePattern>${LOGS}/archived/app_info-%d{yyyy-MM-dd}.%i.log
             </fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
@@ -39,7 +39,7 @@
         </rollingPolicy>
     </appender>
 
-    <!-- Configure log file format for errors -->
+    <!-- Configure log file format for errors (generic error logs )-->
     <appender name="AppErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOGS}/app_error.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -54,13 +54,63 @@
 
         <!-- rollover daily and when the file reaches 10 MegaBytes -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOGS}/archived/error-%d{yyyy-MM-dd}.%i.log
+            <fileNamePattern>${LOGS}/archived/app_error-%d{yyyy-MM-dd}.%i.log
             </fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
+
+    <!-- Log specific for store stack traces-->
+    <appender name="AppStackTraceLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/app_trace.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${LOG_PATTERN}</Pattern>
+        </encoder>
+
+        <!-- Exclude INFO and WORN level of this file -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+
+
+        <!-- rollover daily and when the file reaches 10 MegaBytes -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS}/archived/app_trace-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Log specific for store requests logs -->
+    <appender name="AppRequestsLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/app_request.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${LOG_PATTERN}</Pattern>
+        </encoder>
+
+        <!-- Exclude ERROR level of this file -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+
+
+        <!-- rollover daily and when the file reaches 10 MegaBytes -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS}/archived/app_request-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+
 
     <!-- A file to spring logs -->
     <appender name="SpringLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -79,14 +129,29 @@
     </appender>
 
 
+    <!--
+    == to write to this log, load a specific context
+    == LoggerFactory.getLogger("StackTraceLogger");
+    -->
+    <logger name="StackTraceLogger" level="ERROR" additivity="false">
+        <appender-ref ref="AppStackTraceLog"/>
+    </logger>
 
-    <logger name="br.com.example.jadson" additivity="false" level="INFO">
+    <!--
+    == to write to this log, load a specific context
+    == LoggerFactory.getLogger("RequestLogger");
+    -->
+    <logger name="RequestLogger" level="INFO" additivity="false">
+        <appender-ref ref="AppRequestsLog"/>
+    </logger>
+
+    <logger name="br.com.example.jadson" level="INFO" additivity="false" >
         <appender-ref ref="AppErrorLog" />
         <appender-ref ref="AppInfoLog" />
         <appender-ref ref="Console" />
     </logger>
 
-    <logger name="org.springframework" additivity="false" level="INFO">
+    <logger name="org.springframework" level="INFO" additivity="false" >
         <appender-ref ref="SpringLog" />
         <appender-ref ref="Console" />
     </logger>
