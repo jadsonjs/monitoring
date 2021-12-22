@@ -43,10 +43,21 @@ schema_config:
  
 storage_config: 
   boltdb_shipper: 
+    # Ingesters keep writing the index to BoltDB files in
+    # BoltDB Shipper keeps looking for new and updated files in that directory every 15 Minutes to upload them to the shared object store. 
     active_index_directory: /tmp/loki/boltdb-shipper-active 
+
+    # An Index Gateway will download and synchronize the index, and it will serve it over gRPC to Queriers and Rulers.
+    # Queriers lazily loads BoltDB files from shared object store to configured cache_location
     cache_location: /tmp/loki/boltdb-shipper-cache 
-    cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space 
+    
+    # means if index files for a period are not used for 24 hours they would be removed from cache location.
+    # Can be increased for faster performance over longer query periods, uses more disk space 
+    cache_ttl: 24h         
     shared_store: filesystem 
+
+  # Very simply it stores all the objects (chunks) in the specified directory:
+  # At some point there is a limit to how many chunks can be stored in a single directory, Loki user ran into a strange error with about 5.5 million chunk files   
   filesystem: 
     directory: /tmp/loki/chunks 
  
