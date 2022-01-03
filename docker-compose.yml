@@ -26,7 +26,7 @@ services:
     container_name: monitoring-promtail
     volumes:
       - $PWD/promtail-config.yaml:/etc/promtail/promtail.yaml
-      - /home/jadson/development/temp/log:/var/log/
+      - /var/log/apps:/var/log/
     command: ["--config.file=/etc/promtail/promtail.yaml"]
     ports:
       - "9080:9080"
@@ -43,6 +43,8 @@ services:
     command: [ "--config.file=/etc/loki/local-config.yaml" ]
     ports:
       - "3100:3100"
+    depends_on:
+      - promtail
 
 
 
@@ -60,7 +62,6 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
-      - promtail
       - loki
 
 

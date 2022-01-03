@@ -15,7 +15,7 @@ positions:
 # send the logs to loki that will be runing in this address
 # in Docker, have to use IP address, bacause localhost is the Docker IP
 clients:
-  - url: http://172.18.0.1:3100/loki/api/v1/push
+  - url: http://10.7.98.97:3100/loki/api/v1/push
 
 # configure a log capture
 # from what file the promtail will collect the information
@@ -27,16 +27,19 @@ scrape_configs:
   # although it currently only supports static and kubernetes service discovery.
   static_configs:
   - targets:
-      - 172.18.0.1
+      # ip of local machine
+      - 10.7.98.97
     labels:
-      app: app1      # A `app` label will help identify logs from specific application
-      type: info     # level of logs
-      __path__: /var/log/app_info.log  # where are the log files
+      app: app1      # A `app` label will help to identify logs from specific application
+      type: info     # A type label will help to separate logs types
+      # where are located the log files (if use docker is the directory inside de docker)
+      # see the docker volumes (-v /var/log/apps:/var/log/ )
+      __path__: /var/log/app_info.log
 
 - job_name: collect_error
   static_configs:
   - targets:
-      - 172.18.0.1
+      - 10.7.98.97
     labels:
       app: app1
       type: error
@@ -45,7 +48,7 @@ scrape_configs:
 - job_name: collect_trace
   static_configs:
   - targets:
-      - 172.18.0.1
+      - 10.7.98.97
     labels:
       app: app1
       type: trace
@@ -54,7 +57,7 @@ scrape_configs:
 - job_name: collect_request
   static_configs:
   - targets:
-      - 172.18.0.1
+      - 10.7.98.97
     labels:
       app: app1
       type: request
