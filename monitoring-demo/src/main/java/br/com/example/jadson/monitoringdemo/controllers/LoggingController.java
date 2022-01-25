@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.Enumeration;
 
 /**
@@ -54,6 +56,8 @@ public class LoggingController {
 
         return "Howdy! Check out the Logs to see the output...";
     }
+
+
 
     @GetMapping("/tracing")
     public String tracing() {
