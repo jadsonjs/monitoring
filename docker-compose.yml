@@ -20,19 +20,6 @@ services:
       - "9090:9090"
   
 
-  # promtail is the agent component that provides the usual plugin mode to filter and transforms our log traces 
-  promtail:
-    image: grafana/promtail:2.4.1
-    container_name: monitoring-promtail
-    volumes:
-      - $PWD/promtail-config.yaml:/etc/promtail/promtail.yaml
-      - /var/log/apps:/var/log/
-    command: ["--config.file=/etc/promtail/promtail.yaml"]
-    ports:
-      - "9080:9080"
-
-
-
   # Loki is a logging management system created as part of the Grafana project,  
   # Allow store log to be shown in grafana
   loki:
@@ -43,8 +30,21 @@ services:
     command: [ "--config.file=/etc/loki/local-config.yaml" ]
     ports:
       - "3100:3100"
+   
+
+
+  # promtail is the agent component that provides the usual plugin mode to filter and transforms our log traces 
+  promtail:
+    image: grafana/promtail:2.4.1
+    container_name: monitoring-promtail
+    volumes:
+      - $PWD/promtail-config.yaml:/etc/promtail/promtail.yaml
+      - /var/log/apps:/var/log/
+    command: ["--config.file=/etc/promtail/promtail.yaml"]
+    ports:
+      - "9080:9080"
     depends_on:
-      - promtail
+      - loki    
 
 
 
@@ -62,7 +62,7 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
-      - loki
+      - promtail
 
 
 

@@ -15,51 +15,51 @@ positions:
 # send the logs to loki that will be runing in this address
 # in Docker, have to use IP address, bacause localhost is the Docker IP
 clients:
-  - url: http://10.7.98.97:3100/loki/api/v1/push
+  - url: http://172.18.0.1:3100/loki/api/v1/push
 
 # configure a log capture
 # from what file the promtail will collect the information
 # we will map app log directory to /var/log
 scrape_configs:
 # Name to identify this scrape config in the Promtail UI
-- job_name: collect_logs
+- job_name: collect_demo_logs
   # Promtail borrows the same service discovery mechanism from Prometheus, 
   # although it currently only supports static and kubernetes service discovery.
   static_configs:
   - targets:
       # ip of local machine
-      - 10.7.98.97
+      - 172.18.0.1
     labels:
-      app: app1      # A `app` label will help to identify logs from specific application
+      app: demo      # A `app` label will help to identify logs from specific application
       type: info     # A type label will help to separate logs types
       # where are located the log files (if use docker is the directory inside de docker)
-      # see the docker volumes (-v /var/log/apps:/var/log/ )
+      # see the docker volumes (-v /var/log/apps:/var/log/, so is "/var/log" )
       __path__: /var/log/app_info.log
 
-- job_name: collect_error
+- job_name: collect_demo_error
   static_configs:
   - targets:
-      - 10.7.98.97
+      - 172.18.0.1
     labels:
-      app: app1
+      app: demo
       type: error
       __path__: /var/log/app_error.log   
 
-- job_name: collect_trace
+- job_name: collect_demo_trace
   static_configs:
   - targets:
-      - 10.7.98.97
+      - 172.18.0.1
     labels:
-      app: app1
+      app: demo
       type: trace
       __path__: /var/log/app_trace.log   
 
-- job_name: collect_request
+- job_name: collect_demo_request
   static_configs:
   - targets:
-      - 10.7.98.97
+      - 172.18.0.1
     labels:
-      app: app1
+      app: demo
       type: request
       __path__: /var/log/app_request.log  
 
@@ -70,40 +70,43 @@ scrape_configs:
 # can repeat the configuration changing the location of logs
 ###############################################################
 
-#- job_name: collect_logs2
-#  static_configs:
-#  - targets:
-#      - 172.18.0.1
-#    labels:
-#      app: app2      
-#      type: info    
-#      __path__: /var/log/app2/app_info.log
-
-#- job_name: collect_error2
-#  static_configs:
-#  - targets:
-#      - 172.18.0.1
-#    labels:
-#      app: app2
-#      type: error
-#      __path__: /var/log/app2/app_error.log           
-
-#- job_name: collect_trace2
-#  static_configs:
-#  - targets:
-#      - 172.18.0.1
-#    labels:
-#      app: app1
-#      type: trace
-#      __path__: /var/log/app2/app_trace.log   
-
-#- job_name: collect_request2
-#  static_configs:
-#  - targets:
-#      - 172.18.0.1
-#    labels:
-#      app: app1
-#      type: request
-#      __path__: /var/log/app2/app_request.log  
 
 
+########### base #############
+
+
+- job_name: collect_base_logs
+  static_configs:
+  - targets:
+      - 172.18.0.1
+    labels:
+      app: base     
+      type: info    
+      __path__: /var/log/base_info.log
+
+- job_name: collect_base_error
+  static_configs:
+  - targets:
+      - 172.18.0.1
+    labels:
+      app: base
+      type: error
+      __path__: /var/log/base_error.log           
+
+- job_name: collect_base_trace
+  static_configs:
+  - targets:
+      - 172.18.0.1
+    labels:
+      app: base
+      type: trace
+      __path__: /var/log/base_trace.log   
+
+- job_name: collect_base_request
+  static_configs:
+  - targets:
+      - 172.18.0.1
+    labels:
+      app: base
+      type: request
+      __path__: /var/log/base_request.log

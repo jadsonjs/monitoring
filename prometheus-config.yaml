@@ -13,25 +13,29 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     scrape_interval: 5s
     static_configs:
-      - targets: ['172.18.0.1:8080']
+      - targets: ['172.18.0.1:8083']
+    # basic authentication on spring boot
+    # this will generate a header:
+    # Authorization Basic cHJvbWV0aGV1czpwcm9tZXRoZXVz
     basic_auth:
       username: "prometheus"
       password: "prometheus"
 
-  - job_name: 'monitoring_talento_job'
-    metrics_path: '/talento/actuator/prometheus'
+  - job_name: 'monitoring_base_job'
+    metrics_path: '/actuator/prometheus'
     scrape_interval: 5s
     static_configs:
-      - targets: ['172.18.0.1:8081']
+      - targets: ['172.18.0.1:8083']
+    basic_auth:
+      username: "prometheus"
+      password: "prometheus"    
+
+  - job_name: 'monitoring_system_job'
+    metrics_path: '/system/actuator/prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['172.18.0.1:8082']
     basic_auth:
       username: "prometheus"
       password: "prometheus"  
-
-  #- job_name: 'monitoring_jerimum_job'
-  #  metrics_path: '/jerimumjobs/actuator/prometheus'
-  #  scrape_interval: 5s
-  #  static_configs:
-  #    - targets: ['172.18.0.1:8081']
-  #  basic_auth:
-  #    username: 'prometheus'
-  #    password: 'prometheus'      
+  
