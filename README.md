@@ -81,9 +81,9 @@ We can also define the level and the file to log in application.properties file 
 Logback also allow you make configuration in a specific file the **logback-spring.xml** under the resources directory
 
 In this file can define some **appenders** for configuration. Through the appenders we can to specify  a file to save the log and each type of log will be saved there. We can also use a filter, to filter by the level of Log. 
-The appender can use a rolling policy to to discard old logs.
+The appender can use a rolling policy to discard old logs.
 
-In the bellow example, we are using RoollingFileAppender class to rollover daily the log files. The log file will be rollover when reaches 10MB. We define a _app_request.log_, and use a LevelFilter to not save errors on this file.
+In the bellow example, we are using **RoollingFileAppender** class to rollover daily the log files. The log file will be rollover when reaches 10MB. We define a _app_request.log_, and use a LevelFilter to not save errors on this file.
 
 
 Lastly, we define a **logger** for INFO level that will use this appender as well the
@@ -129,6 +129,8 @@ console appender to save log in application console also.
 
 ## Storing metrics with Prometheus
 
+![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/micrometer_prometheus.png)
+
 Prometheus is a time-series database that stores our metric data by pulling it periodically over HTTP.
  
 Copy this configuration file to the current directory as prometheus-config.yaml. Because we are using docker, replace it by the machine IP, “localhost” alias will be the docker IP and will not work.
@@ -171,8 +173,9 @@ public static void main(String[] args) {
 
 ![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/promtail_loki.png)
 
-Loki is a logging management system created as part of the Grafana project, and it has been created with a different approach in mind than Elasticsearch.
-Loki is a horizontally-scalable, highly-available, multi-tenant log aggregation system inspired by Prometheus. It is designed to be very cost effective and easy to operate. It does not index the contents of the logs, but rather a set of labels for each log stream.
+>_"Loki is a logging management system created as part of the Grafana project, and it has been created with a different approach in mind than Elasticsearch.
+Loki is a horizontally-scalable, highly-available, multi-tenant log aggregation system inspired by Prometheus. It is designed to be very cost effective and easy to operate. It does not index the contents of the logs, but rather a set of labels for each log stream"_
+Alex Vazquez - https://medium.com/coderbyte/discover-loki-a-lightweight-alternative-to-the-elk-stack-3b67ad216327
 
 Loki Architecture
 
