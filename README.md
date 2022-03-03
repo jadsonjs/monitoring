@@ -164,3 +164,41 @@ public static void main(String[] args) {
 
 
 ## Store Application Logs in Loki
+
+
+## Visualizing metrics on Grafana
+
+## Docker compose
+
+To facilitate management, in the project there is also a **docker-compose.yml** file to run loki, promtail, prometheus and grafana with a single command.
+
+To install and run all applications with a single command, type:
+
+```
+docker-compose up -d
+```
+
+To stop removing containers run:
+
+```
+docker-compose down
+```
+
+To stop containers without removing their data, run:
+
+```
+docker-compose stop
+```
+
+And to start again run:
+
+```
+docker-compose start
+```
+
+And restart the containers by reloading the docker-compose.yml settings:
+
+```
+docker-compose stop
+docker-compose up -d
+```
