@@ -276,6 +276,89 @@ We the use the explore to see the content of a log file:
 ![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/grafana_explore.png)
 ![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/grafana_explore_2.png)
 
+
+### LogQL: Log query language
+
+There are two types of LogQL queries:
+
+Log queries return the contents of log lines.
+Metric queries extend log queries to calculate values based on query results.
+
+#### Log queries 
+
+All LogQL queries contain a log stream selector.
+
+Example:
+
+```
+{app="mysql",name="mysql-backup"}
+```
+
+The = operator after the label name is a label matching operator. The following label matching operators are supported:
+
+Regex log stream examples:
+
+{name =~ "mysql.+"}
+{name !~ "mysql.+"}
+{name !~ `mysql-\d+`}
+
+
+Line filter expression
+The line filter expression does a distributed grep over the aggregated logs from the matching log streams. It searches the contents of the log line, discarding those lines that do not match the case sensitive expression.
+
+Each line filter expression has a filter operator followed by text or a regular expression. These filter operators are supported:
+
+|=: Log line contains string
+
+!=: Log line does not contain string
+
+|~: Log line contains a match to the regular expression
+
+!~: Log line does not contain a match to the regular expression
+
+
+Example:
+
+All lines of error with the string "NullPointerException"
+```
+{type="error"} |= "NullPointerException" 
+```
+
+All lines of error without the string start with "NullPointerException"
+
+```
+{type="error"} !~ "NullPointerException*"
+```
+
+
+#### Metric queries
+
+Log range aggregations
+
+The functions:
+
+**rate(log-range)**: calculates the number of entries per second
+
+**count_over_time(log-range)**: counts the entries for each log stream within the given range.
+
+**bytes_rate(log-range)**: calculates the number of bytes per second for each stream.
+
+**bytes_over_time(log-range)**: counts the amount of bytes used by each log stream for a given range.
+
+**absent_over_time(log-range)**: returns an empty vector if the range vector passed to it has any elements and a 1-element vector with the value 1 if the range vector passed to it has no elements.
+
+Examples:
+
+Count all the log lines within the last five minutes for the MySQL job.
+
+```
+count_over_time({job="mysql"}[5m])
+```
+
+
+
+<br/> <br/> <br/>
+
 ## Docker compose
 
 To facilitate management, in the project there is also a **docker-compose.yml** file to run loki, promtail, prometheus and grafana with a single command.
@@ -310,3 +393,25 @@ And restart the containers by reloading the docker-compose.yml settings:
 docker-compose stop
 docker-compose up -d
 ```
+
+  
+
+<br/> <br/> <br/>
+
+## References
+
+Baeldung - Logging in Spring Boot - https://www.baeldung.com/spring-boot-logging
+
+Spring boot multiple log files example - https://howtodoinjava.com/spring-boot2/logging/multiple-log-files/ 
+
+Configuring Logback with Spring Boot - https://www.codingame.com/playgrounds/4497/configuring-logback-with-spring-boot 
+
+Monitoring Spring Boot Apps with Micrometer, Prometheus, and Grafana - https://stackabuse.com/monitoring-spring-boot-apps-with-micrometer-prometheus-and-grafana/
+
+Projetos pequenos e médios usam ELK como um log? Eu vou pregar alguns truques novos. https://mp.weixin.qq.com/s?__biz=MzUzMzQ2MDIyMA==&mid=2247489891&idx=2&sn=712ce17d70e8062f49ffd1a334418f63&scene=21#wechat_redirect (translate from chinese using google chrome)
+
+SECURING PROMETHEUS API AND UI ENDPOINTS USING BASIC AUTH - https://prometheus.io/docs/guides/basic-auth/
+
+Very Good Tutorial Loki and Promtail on Docker - https://www.youtube.com/watch?v=eJtrxj9U_P8
+
+LogQL: Log query language - https://grafana.com/docs/loki/latest/logql/
