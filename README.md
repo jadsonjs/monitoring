@@ -1,6 +1,10 @@
 # Monitoring Spring Boot Applications with Grafana
 
 
+Basic monitoring project for a Spring Boot application.
+This project collects JVM metrics and stores them in the **Prometheus** database. Well, as it configures the application to generate log files, collects these files with **Promtail**, promtail sends the data to the **Loki** database. The data can then be viewed in the **Grafana** interface.
+All applications run on Docker, there is a docker-compose.yml file that raises the entire environment with a single command: ** docker-compose up -d**
+
 ![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/tools.png)
 
 
