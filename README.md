@@ -372,7 +372,7 @@ Select the Gauge type, specify a threshold
 ![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/grafana_dashboard1.png)
 
 
-In the **Query** filed enter with a LogQL query that return a integer value. In this case, we are couting all logs of type _"error"_ of application _"app1"_ that have a string _"NullPointerException"_ in the last hour.
+In the **Query** filed enter with a LogQL query that return a integer value. In this case, we are couting all logs of type _"error"_ of application _"app1"_ that have a string _"NullPointerException"_ in the last one hour.
 
 ![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/grafana_dashboard2.png)
 
