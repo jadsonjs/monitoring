@@ -165,6 +165,8 @@ public static void main(String[] args) {
 
 ## Store Application Logs in Loki
 
+![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/promtail_loki.png)
+
 Loki is a logging management system created as part of the Grafana project, and it has been created with a different approach in mind than Elasticsearch.
 Loki is a horizontally-scalable, highly-available, multi-tenant log aggregation system inspired by Prometheus. It is designed to be very cost effective and easy to operate. It does not index the contents of the logs, but rather a set of labels for each log stream.
 
@@ -203,17 +205,76 @@ Access http://localhost:9080 to check if promtail is working
 ![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/promtail.png)
 
 
+### Loki
+
+Now, to execute the LOKI on docker, type the follow command
+
+
 ```
 docker run -d -p 3100:3100 -p 9096:9096 --name monitoring-loki -v $PWD/loki-config.yaml:/mnt/config/loki.yml -v /data/loki/:/tmp/ grafana/loki:2.4.2 -config.file=/mnt/config/loki.yml
 ````
 
+Access http://localhost:3100/ready to see if loki is running.
+
+
+![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/loki.png)
+
 
 ## Visualizing metrics on Grafana
+
+Prometheus and Loki offers crude information, for a rich UI, we need to add Grafana.
+Grafana can pull data from various data sources like Prometheus, Elasticsearch, InfluxDB, etc.
+
+To run Grafana with Docker, execute the following command:
+
 
 ```
 docker run -d -p 3000:3000 --name monitoring-grafana-p -v /data/grafana:/var/lib/grafana grafana/grafana:8.4.1
 ````
 
+Access http://localhost:3000 to see the grafana login page.
+
+
+![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/grafana_login.png)
+
+The initital user and password are "admin" and "admin".
+
+To visualize the metrics stored in prometheus:
+
+>Configuration -> Data Source -> Add data Source and Choose Prometheus.
+
+![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/grafana_prometheus_data.png)
+
+Enable basic authentication and inform the user and password used in file **web.yml**
+
+Now to visualize the log data stored in Loki
+
+>Configuration -> Data Source -> Add data Source and select Loki.
+
+
+![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/grafana_loki_data.png)
+
+### Grafana Dashboards
+
+With Grafana, we can create a DashBoards from zero, or import a new one.
+
+
+For Spring Boot projects, the **JVM dashboard** (https://grafana.com/grafana/dashboards/4701 ) is very popular dashboard to visualize the prometheus metrics.
+
+To see the metrics collected by prometheus, on Grafana Home page, click on **"+"** icon and on "Import a new Daskboard". Informe the number (4701) or json file of the dashboard and choose data source of prometheus.
+
+Now we can see in a rich way, metric information about the use of our Spring Boot Application:
+
+
+![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/grafana_jvm_dashboard.png)
+
+
+How log information usually are specific for your application, there is not a common dashboard for logs like we have for JVM metrics. So, most of time, you will need to create one.
+
+We the use the explore to see the content of a log file:
+
+![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/grafana_explore.png)
+![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/grafana_explore_2.png)
 
 ## Docker compose
 
