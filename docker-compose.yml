@@ -15,7 +15,10 @@ services:
     # uses the prometheus-config.yaml configuration file in current directory
     volumes:
       - $PWD/prometheus-config.yaml:/etc/prometheus/prometheus.yaml
-    command: [ "--config.file=/etc/prometheus/prometheus.yaml" ]
+      - $PWD/web.yml:/etc/prometheus/web.yml
+      # to persit the data
+      #- /data/prometheus/:/prometheus 
+    command: [ "--config.file=/etc/prometheus/prometheus.yaml", "--web.config.file=/etc/prometheus/web.yml" ]
     ports:
       - "9090:9090"
   
@@ -27,9 +30,12 @@ services:
     container_name: monitoring-loki
     volumes:
       - $PWD/loki-config.yaml:/etc/loki/local-config.yaml
+      # to persit the data
+      # - /data/loki/:/tmp/ 
     command: [ "--config.file=/etc/loki/local-config.yaml" ]
     ports:
-      - "3100:3100"
+      - "3100:3100"  # http port
+      - "9096:9096"  # gRCP port
    
 
 
@@ -53,11 +59,9 @@ services:
     image: grafana/grafana:8.2.5
     container_name: monitoring-grafana
     # configure grafana , see how this work (https://github.com/thbrunzendorf/monitoring-demo)
-    #volumes:
-    #  - ./grafana/grafana.ini:/etc/grafana/grafana.ini
-    #  - ./grafana/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
-    #  - ./grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
-    #  - ./grafana/example.json:/var/lib/grafana/dashboards/example.json
+    # volumes:
+      # to persiste database and plugins     
+      # - /data/grafana:/var/lib/grafana
     ports:
       - "3000:3000"
     depends_on:

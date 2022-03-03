@@ -1,0 +1,11 @@
+
+# basic autentication to the user admin
+# can be generate by the java code:
+#
+#  public static void main(String[] args) {
+#    BCryptPasswordEncoder  bCrypt = new BCryptPasswordEncoder();
+#    System.out.println(bCrypt.encode("test"));
+#  }
+#
+basic_auth_users:
+    admin: $2b$12$hNf2lSsxfm0.i4a.1kVpSOVyBCfIB51VRjgBUyv6kdnyTlgWj81Ay

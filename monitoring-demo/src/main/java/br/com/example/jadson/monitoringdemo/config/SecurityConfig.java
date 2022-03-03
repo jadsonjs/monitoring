@@ -1,12 +1,3 @@
-/*
- * Universidade Federal do Rio Grande do Norte
- * Instituto Metrópole Digital
- * Diretoria de Tecnologia da Informação
- *
- * monitoring-demo
- * SecurityConfig
- * @since 25/01/2022
- */
 package br.com.example.jadson.monitoringdemo.config;
 
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
@@ -23,11 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.nio.charset.Charset;
 import java.util.Base64;
 
-/**
- * TODO insert a relevant comment here!
- *
- * @author Jadson Santos - jadson.santos@ufrn.br
- */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)

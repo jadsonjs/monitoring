@@ -1,5 +1,6 @@
 #
 # Tempo configuration file.
+# early adoption
 #
 
 auth_enabled: false
