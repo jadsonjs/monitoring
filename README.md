@@ -379,6 +379,12 @@ In the **Query** filed enter with a LogQL query that return a integer value. In 
 
 If the value returned by the query was less than the threshold, the gauge graph will turn green, if it passes the threshold, it will turn red.
 
+![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/grafana_dashboard3.png)
+
+
+We can add several panels with different queries to our dashboard.
+
+
 <br/> <br/> <br/>
 
 ## Docker compose
