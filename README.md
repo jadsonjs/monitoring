@@ -1,5 +1,7 @@
 # Monitoring Spring Boot Applications with Grafana
 
+**Jadson Santos - jadsonjs@gmail.com** <br/>
+**Last updated at: 03/03/2022** <br/>
 
 Basic monitoring project for a Spring Boot application.
 This project collects JVM metrics and stores them in the **Prometheus** database. Well, as it configures the application to generate log files, collects these files with **Promtail**, promtail sends the data to the **Loki** database. The data can then be viewed in the **Grafana** interface.
