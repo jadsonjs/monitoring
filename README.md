@@ -165,8 +165,55 @@ public static void main(String[] args) {
 
 ## Store Application Logs in Loki
 
+Loki is a logging management system created as part of the Grafana project, and it has been created with a different approach in mind than Elasticsearch.
+Loki is a horizontally-scalable, highly-available, multi-tenant log aggregation system inspired by Prometheus. It is designed to be very cost effective and easy to operate. It does not index the contents of the logs, but rather a set of labels for each log stream.
+
+Loki Architecture
+
+ - Distributor: Receives client logs and sends them to ingester
+ - Ingester: Receives logs and stores
+ - Querier: The service that receives LogQL commands
+ - Query Frontend: Manage the executed queries
+ - Chunk Store: Holds the storage of loki indexes 
+
+### Promtail
+
+O Promtail is a log collector responsible for collect log of the application and send it to loki
+
+**It is usually deployed to every machine that has applications needed to be monitored.**
+
+Replace http://loki:3100 by the loki address, as we are using docker, replace it by the machine IP, “localhost” alias will be the docker IP and will not work.
+
+
+You can use environment variable references in the configuration file to set values that need to be configurable during deployment. To do this, pass -config.expand-env=true and use:
+
+${VAR}
+
+Where VAR is the name of the environment variable.
+
+Now, install and execute the promtail inside a docker with the follow command:
+
+```
+docker run -d -p 9080:9080 --name promtail -v $PWD/promtail-config.yaml:/etc/promtail/promtail.yml -v /var/log/apps:/var/log/ grafana/promtail:2.4.2 -config.file=/etc/promtail/promtail.yml
+```
+
+Access http://localhost:9080 to check if promtail is working
+
+
+![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/promtail.png)
+
+
+```
+docker run -d -p 3100:3100 -p 9096:9096 --name monitoring-loki -v $PWD/loki-config.yaml:/mnt/config/loki.yml -v /data/loki/:/tmp/ grafana/loki:2.4.2 -config.file=/mnt/config/loki.yml
+````
+
 
 ## Visualizing metrics on Grafana
+
+```
+docker run -d -p 3000:3000 --name monitoring-grafana-p -v /data/grafana:/var/lib/grafana grafana/grafana:8.4.1
+````
+
 
 ## Docker compose
 
