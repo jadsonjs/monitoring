@@ -125,7 +125,7 @@ console appender to save log in application console also.
 
 ```
 
-
+<br/> <br/> <br/>
 
 ## Storing metrics with Prometheus
 
@@ -169,6 +169,7 @@ public static void main(String[] args) {
 ```
 
 
+<br/> <br/> <br/>
 ## Store Application Logs in Loki
 
 ![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/promtail_loki.png)
@@ -362,7 +363,21 @@ Count all the log lines within the last five minutes for the MySQL job.
 count_over_time({job="mysql"}[5m])
 ```
 
+#### Create your own grafana dashboard
 
+On Grafana home you can click on **"+"** -> Dashboard -> Add a new Panel
+
+Select the Gauge type, specify a threshold
+
+![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/grafana_dashboard1.png)
+
+
+In the **Query** filed enter with a LogQL query that return a integer value. In this case, we are couting all logs of type _"error"_ of application _"app1"_ that have a string _"NullPointerException"_ in the last hour.
+
+![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/grafana_dashboard2.png)
+
+
+If the value returned by the query was less than the threshold, the gauge graph will turn green, if it passes the threshold, it will turn red.
 
 <br/> <br/> <br/>
 
