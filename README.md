@@ -230,6 +230,21 @@ Access http://localhost:3100/ready to see if loki is running.
 ![alt text](https://github.com/jadsonjs/monitoring/blob/master/imgs/loki.png)
 
 
+Loki does not have authentication mecanism. This is a problem, the database of Loki stay open. The work around solution is configure a 
+**reserve proxy** using for example Nginx. 
+
+For that, you can use this docker image passing environments variables to configure the basic authentication and the forward of reserve proxy url and port:
+
+```
+docker run -it -p 80:80 --env BASIC_USERNAME=user --env BASIC_PASSWORD=password --env FORWARD_HOST=loki --env FORWARD_PORT=3100 laurentbel/nginx-basic-auth
+```
+
+For more details access: https://medium.com/pernod-ricard-tech/adding-basic-authentication-to-loki-using-nginx-7544db814b78
+
+
+
+
+<br/> <br/> <br/>
 ## Visualizing metrics on Grafana
 
 Prometheus and Loki offers crude information, for a rich UI, we need to add Grafana.
@@ -445,3 +460,6 @@ SECURING PROMETHEUS API AND UI ENDPOINTS USING BASIC AUTH - https://prometheus.i
 Very Good Tutorial Loki and Promtail on Docker - https://www.youtube.com/watch?v=eJtrxj9U_P8
 
 LogQL: Log query language - https://grafana.com/docs/loki/latest/logql/
+
+
+Adding Basic Authentication to Loki using Nginx: https://medium.com/pernod-ricard-tech/adding-basic-authentication-to-loki-using-nginx-7544db814b78
